@@ -1,5 +1,6 @@
 package com.qljt.gantry.common.config;
 
+import com.qljt.gantry.platform.shiro.ShiroFilter;
 import com.qljt.gantry.platform.shiro.UserRealm;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -12,8 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.apache.shiro.mgt.SecurityManager;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.servlet.Filter;
 
 /**
  * @author liuliangliang
@@ -51,33 +54,16 @@ public class ShiroConfig {
 
     @Bean({"shiroFilter"})
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
-        shiroFilter.setSecurityManager(securityManager);
-        shiroFilter.setLoginUrl("/login.html");
-        shiroFilter.setUnauthorizedUrl("/");
-
-        Map<String, String> filterMap = new LinkedHashMap<String, String>();
-        filterMap.put("/swagger/**", "anon");
-        filterMap.put("/v2/api-docs", "anon");
-        filterMap.put("/swagger-ui.html", "anon");
-        filterMap.put("/webjars/**", "anon");
-        filterMap.put("/swagger-resources/**", "anon");
-
-        filterMap.put("/statics/**", "anon");
-        filterMap.put("/upgrade/**", "anon");
-        filterMap.put("/login.html", "anon");
-        filterMap.put("/sys/login", "anon");
-        filterMap.put("/attachment/uploadFile", "anon");
-        filterMap.put("/attachment/uploadLogFile", "anon");
-        filterMap.put("/favicon.ico", "anon");
-        filterMap.put("/sysInfo", "anon");
-        filterMap.put("/captcha.jpg", "anon");
-        filterMap.put("/images/**", "anon");
-        filterMap.put("/excel/**", "anon");
-        filterMap.put("/**", "authc");
-        shiroFilter.setFilterChainDefinitionMap(filterMap);
-
-        return shiroFilter;
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        Map<String, Filter> filter = new HashMap<>();
+        filter.put("auth",new ShiroFilter());
+        shiroFilterFactoryBean.setFilters(filter);
+        Map<String,String> filterMap = new LinkedHashMap<>();
+        //yf：登录逻辑不用anon,统一走自定义filter
+        filterMap.put("/**","auth");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
+        return shiroFilterFactoryBean;
     }
 
     @Bean({"lifecycleBeanPostProcessor"})

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.qljt.gantry.platform.base.bean.BaseEntity;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,17 +18,19 @@ import java.util.List;
 public class SysMenuEntity extends BaseEntity{
 
     @TableId
-    private Long menuId;
-    private Long parentId;
-
-    @TableField(exist = false)
-    private String parentName;
+    private Long id;
+    private Long pid;
+    private Integer sort;
+    private String remark;
+    private Date createTime;
+    private String path;
     private String name;
-    private String url;
-    private String perms;
-    private Integer type;
+    private Integer hidden;
+    private String redirect;
+    private String component;
+    private Integer alwaysShow;
+    private Integer meta;
+    private String title;
     private String icon;
-    private Integer orderNum;
-    private String descript;
 
 }

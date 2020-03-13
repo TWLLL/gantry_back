@@ -52,5 +52,4 @@ public class UserEntity extends BaseEntity{
 
     private Long deptId;
 
-
 }

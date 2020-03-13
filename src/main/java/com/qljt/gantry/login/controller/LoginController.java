@@ -8,12 +8,12 @@ import com.qljt.gantry.platform.dept.bean.UserEntity;
 import com.qljt.gantry.platform.shiro.ShiroUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -29,12 +29,16 @@ public class LoginController extends BaseController{
     @Autowired
     LoginService loginService;
 
+    /**
+     * 用户登录
+     * @param  用户名密码Map
+     * @return 用户名、权限[]、菜单权限、token
+     */
     @RequestMapping(value = {"/sys/login"}, method = {RequestMethod.POST})
     @ResponseBody
     public ResultJson login(@RequestBody Map<String, Object> paramsMap)
     {
         UsernamePasswordToken token = null;
-        //String username, String password, String captcha
         String userName = "";
         try{
             Subject subject = ShiroUtils.getSubject();
@@ -42,7 +46,6 @@ public class LoginController extends BaseController{
             String password = (String) paramsMap.get("password");
             token = new UsernamePasswordToken(userName, password);
             subject.login(token);
-
         }catch (UnknownAccountException e){
             return  ResultJson.error(CodeMsg.SERVER_ERROR.fillArgs(e.getMessage()));
         }catch (IncorrectCredentialsException e) {
@@ -52,11 +55,14 @@ public class LoginController extends BaseController{
         } catch (AuthenticationException e) {
             return ResultJson.error(CodeMsg.SERVER_ERROR.fillArgs("账户验证失败"));
         }
-
         return ResultJson.success(loginService.getLoginInfo(userName));
     }
 
-    @RequestMapping(value = {"/sys/token"}, method = {RequestMethod.GET})
+    /**
+     * @param token
+     * @return 用户权限信息信息
+     */
+    @RequestMapping(value = {"/sys/getInfo"}, method = {RequestMethod.GET})
     @ResponseBody
     public ResultJson queryUserInfo(String token)
     {
@@ -76,14 +82,16 @@ public class LoginController extends BaseController{
 
     }
 
-
-    @RequestMapping(value = {"/sys/test"}, method = {RequestMethod.GET})
-    @ResponseBody
-    public ResultJson test()
+    /**
+     * @author: yf
+     * 退出登录
+     */
+    @RequestMapping(value = "/sys/logout",method = RequestMethod.POST)
+    public ResultJson logout()
     {
-        return ResultJson.success(CodeMsg.SUCCESS);
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return ResultJson.success("退出登录.....");
     }
-
-
 
 }

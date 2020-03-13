@@ -37,15 +37,19 @@ public class UserRealm extends AuthorizingRealm {
     public static final int  USER_STATUS_LOCK = 0;
 
     @Autowired
+    @SuppressWarnings("all")
     private UserMapper userMapper;
 
     @Autowired
+    @SuppressWarnings("all")
     private MenuMapper menuMapper;
 
     @Autowired
+    @SuppressWarnings("all")
     private RoleMapper roleMapper;
 
     @Autowired
+    @SuppressWarnings("all")
     private UserRoleRelMapper userRoleRelMapper;
 
 
@@ -64,7 +68,7 @@ public class UserRealm extends AuthorizingRealm {
             permsList = new ArrayList<>(menuEntityList.size());
             //超级管理员拥有所有的menu的权限
             for (SysMenuEntity sysMenuEntity : menuEntityList){
-                permsList.add(sysMenuEntity.getPerms());
+//                permsList.add(sysMenuEntity.getPerms());
             }
         }
         //非管理员角色的情况
@@ -105,11 +109,12 @@ public class UserRealm extends AuthorizingRealm {
         Map<String,Object> paramsMap = new HashMap<>();
         paramsMap.put("USER_NAME",token.getUsername());
         List<UserEntity> userEntityList = this.userMapper.selectByMap(paramsMap);
-        if (userEntityList != null) {
+        // yf：加上了&& userEntityList.size() > 0
+        if (userEntityList != null && userEntityList.size() > 0) {
             userEntity = userEntityList.get(0);
         }
-
-        if (userEntity == null) {
+        // yf：由原来的userEntity == null改为userEntity.getUserName() == null
+        if (userEntity.getUserName() == null) {
             throw new UnknownAccountException("账号或者密码不正确");
         }
 
