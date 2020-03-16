@@ -1,5 +1,6 @@
 package com.qljt.gantry.platform.dept.bean;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -48,8 +49,11 @@ public class UserEntity extends BaseEntity{
 
     private Integer status;
 
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     private Long deptId;
 
+    @TableField(exist = false)
+    private String deptName;
 }

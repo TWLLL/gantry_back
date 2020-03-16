@@ -1,15 +1,13 @@
 package com.qljt.gantry.platform.dept.bean;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.qljt.gantry.platform.base.bean.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author liuliangliang
@@ -29,5 +27,11 @@ public class DeptEntity extends BaseEntity{
     private Timestamp createDate;
     private String ancestors;
     private Integer delFlag;
+
+    @TableField(exist = false)
+    private String pName;
+
+    @TableField(exist = false)
+    private List<DeptEntity> childrenList;
 
 }
