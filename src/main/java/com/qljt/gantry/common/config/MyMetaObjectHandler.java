@@ -16,10 +16,11 @@ public class MyMetaObjectHandler implements MetaObjectHandler{
     @Override
     public void insertFill(MetaObject metaObject) {
         setInsertFieldValByName("createTime", new Date(), metaObject);
+        setInsertFieldValByName("createDate", new Date(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-
+        setUpdateFieldValByName("updateTime", new Date(), metaObject);
     }
 }

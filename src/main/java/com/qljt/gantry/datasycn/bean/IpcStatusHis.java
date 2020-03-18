@@ -1,5 +1,6 @@
 package com.qljt.gantry.datasycn.bean;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,6 +8,8 @@ import com.qljt.gantry.platform.base.bean.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -26,7 +29,8 @@ public class IpcStatusHis extends BaseEntity{
   private String appInfo;
   private Integer net;
   private Integer status;
-  private java.sql.Timestamp createdate;
+  @TableField(fill = FieldFill.INSERT)
+  private Date createdate;
   @TableField(value = "exfield_1")
   private String exfield1;
   @TableField(value = "exfield_2")

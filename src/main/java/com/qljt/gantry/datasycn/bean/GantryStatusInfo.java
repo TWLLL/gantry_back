@@ -1,5 +1,6 @@
 package com.qljt.gantry.datasycn.bean;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,6 +8,8 @@ import com.qljt.gantry.platform.base.bean.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -19,12 +22,15 @@ public class GantryStatusInfo extends BaseEntity{
   private String name;
   private String code;
   private String ip;
-  private java.sql.Timestamp recordNowData;
+  @TableField(fill = FieldFill.INSERT)
+  private Date recordNowData;
   private String rsuDate;
   private String lprDate;
   private Integer status;
-  private java.sql.Timestamp createDate;
-  private java.sql.Timestamp updateTime;
+  @TableField(fill = FieldFill.INSERT)
+  private Date createDate;
+  @TableField(fill = FieldFill.UPDATE)
+  private Date updateTime;
   private String mac;
   private Integer count;
   private Integer countAlive;
