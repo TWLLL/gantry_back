@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qljt.gantry.platform.dept.bean.DeptEntity;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author liuliangliang
  * @create 2020-02-26 14:58
@@ -11,4 +14,18 @@ import org.apache.ibatis.annotations.*;
 public interface DeptMapper extends BaseMapper<DeptEntity>{
 
 
+    @Select("select dept.* from sys_dept dept where dept.del_flag = 0")
+    List<DeptEntity> getDeptTreeList(Map<String, Object> params);
+
+    @Select("select dept.* from sys_dept dept where dept_id = #{id}")
+    DeptEntity getDept(Map<String, Object> params);
+
+    @Select("select dept.* from sys_dept dept where dept_id = #{id}")
+    DeptEntity getDeptById(Long id);
+
+    @Select("select dept.* from sys_dept dept where parent_id = #{pid}")
+    List<DeptEntity> getAllChildDeptByPid(Long pid);
+
+    @Select("select dept.* from sys_dept dept where dept_id = 1")
+    DeptEntity getRoot();
 }
