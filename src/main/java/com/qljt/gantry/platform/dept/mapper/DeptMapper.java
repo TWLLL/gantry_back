@@ -20,4 +20,12 @@ public interface DeptMapper extends BaseMapper<DeptEntity>{
     @Select("select dept.* from sys_dept dept where dept_id = #{id}")
     DeptEntity getDept(Map<String, Object> params);
 
+    @Select("select dept.* from sys_dept dept where dept_id = #{id}")
+    DeptEntity getDeptById(Long id);
+
+    @Select("select dept.* from sys_dept dept where parent_id = #{pid}")
+    List<DeptEntity> getAllChildDeptByPid(Long pid);
+
+    @Select("select dept.* from sys_dept dept where dept_id = 1")
+    DeptEntity getRoot();
 }

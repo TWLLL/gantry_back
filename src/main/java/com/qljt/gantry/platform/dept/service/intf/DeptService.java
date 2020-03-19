@@ -21,4 +21,7 @@ public interface DeptService extends IService<DeptEntity> {
     Integer updateObj(Map<String, Object> params);
 
     Integer delObj(Map<String, Object> params);
+
+    List<Map<String, Object>> getDeptTreeListByRole(Map<String, Object> params);
+
 }

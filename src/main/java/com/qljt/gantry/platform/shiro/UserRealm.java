@@ -109,11 +109,9 @@ public class UserRealm extends AuthorizingRealm {
         Map<String,Object> paramsMap = new HashMap<>();
         paramsMap.put("USER_NAME",token.getUsername());
         List<UserEntity> userEntityList = this.userMapper.selectByMap(paramsMap);
-        // yf：加上了&& userEntityList.size() > 0
         if (userEntityList != null && userEntityList.size() > 0) {
             userEntity = userEntityList.get(0);
         }
-        // yf：由原来的userEntity == null改为userEntity.getUserName() == null
         if (userEntity.getUserName() == null) {
             throw new UnknownAccountException("账号或者密码不正确");
         }

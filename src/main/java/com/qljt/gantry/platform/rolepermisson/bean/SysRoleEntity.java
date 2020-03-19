@@ -31,6 +31,13 @@ public class SysRoleEntity extends BaseEntity{
     @TableField(exist = false)
     private List<Long> deptIdList;
 
+    @TableField(exist = false)
+    private List<String> deptList;
+
+    private Integer roleType;
+
+    private Integer status;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 

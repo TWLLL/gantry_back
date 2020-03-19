@@ -11,6 +11,7 @@ import com.qljt.gantry.platform.rolepermisson.bean.SysUserRoleRelEntity;
 import com.qljt.gantry.platform.rolepermisson.mapper.MenuRoleRelMapper;
 import com.qljt.gantry.platform.rolepermisson.mapper.RoleMapper;
 import com.qljt.gantry.platform.rolepermisson.mapper.UserRoleRelMapper;
+import com.qljt.gantry.platform.shiro.ShiroUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,31 +23,25 @@ import java.util.*;
  * @create 2020-03-02 19:34
  */
 @Service
+@SuppressWarnings("all")
 public class LoginService {
 
     @Autowired
-    // yf：该注解提交时删除！！
-    @SuppressWarnings("all")
     private UserMapper userMapper;
 
     @Autowired
-    @SuppressWarnings("all")
     private UserRoleRelMapper userRoleRelMapper;
 
     @Autowired
-    @SuppressWarnings("all")
     private RoleMapper roleMapper;
 
     @Autowired
-    @SuppressWarnings("all")
     private MenuRoleRelMapper menuRoleRelMapper;
 
     @Autowired
-    @SuppressWarnings("all")
     private MenuMapper menuMapper;
 
     @Autowired
-    @SuppressWarnings("all")
     MenuService routerService;
 
     public Map<String,Object> getLoginInfo(String username) {
@@ -91,23 +86,11 @@ public class LoginService {
         String encryptionKey= DigestUtils.sha256Hex(user.getSalt()+user.getUserName());
         resultMap.put("token", encryptionKey);
 
-
-//        Set<String> permissionList = new HashSet<>();
-//        for (SysRole role : roles) {
-//            roleList.add(role.getRole());//角色存储
-//        }
-//        //此处如果多个角色都拥有某项权限，bu会数据重复，内部用的是Set
-//        List<SysPermission> sysPermissions = sysPermissionService.selectPermByRole(roles);
-//        for (SysPermission perm : sysPermissions) {
-//            permissionList.add(perm.getPermission());//权限存储
-//        }
-
         return  resultMap;
     }
 
-
-    @SuppressWarnings("all")
     public Map<String,Object> getRoleInfo(Long userId) {
+        // 根据userId得user对象
         UserEntity userEntity = this.userMapper.selectById(userId);
 
         //获取用户和角色关系信息
@@ -120,17 +103,21 @@ public class LoginService {
         for (SysUserRoleRelEntity userRoleRelEntity : userRoleRelEntityList) {
             roleList0.add(roleMapper.selectById(userRoleRelEntity.getRoleId()));
         }
-        // yf：只取roleName即可
         Set<String> roleNameList = new HashSet<>();
+        String roleType = "noRoleType";
+        String roleId = "noRoleId";
         for (SysRoleEntity entity : roleList0) {
             roleNameList.add(entity.getRoleName());
+            roleType = entity.getRoleType() + "";
+            roleId = entity.getRoleId() + "";
         }
+
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("roles",roleNameList);
+        resultMap.put("roleType",roleType);
+        resultMap.put("roleId",roleId);
         resultMap.put("name",userEntity.getUserName());
 
-        // 得roles
-        System.out.println(roleList0);// 已得到
         // 得roles对应的菜单
         //获取角色菜单关系的信息
         Set<SysMenuEntity> menuEntitySet = new HashSet<>();
@@ -143,9 +130,7 @@ public class LoginService {
                 menuEntitySet.add(menuEntity);
             }
         }
-//        List<SysMenuEntity> list = new ArrayList(menuEntitySet);
         List<SysMenuEntity> list = routerService.getAllTopRouter();
-
 
         // 渲染路由模板
         StringBuilder routers = new StringBuilder();
@@ -155,22 +140,15 @@ public class LoginService {
             routers.append("{ ");
             routers.append("\"path\": \"").append(list.get(k).getPath()).append("\", ");
             routers.append("\"name\": \"").append(list.get(k).getName()).append("\", ");
-            if(list.get(k).getComponent() != null)
-            {
-                routers.append("\"component\": \"").append(list.get(k).getComponent()).append("\", ");
-            }
+            if(list.get(k).getComponent() != null) routers.append("\"component\": \"").append(list.get(k).getComponent()).append("\", ");
+            routers.append("\"alwaysShow\" : \"").append(list.get(k).getHidden() == 1 ? "true" : "false").append("\", ");
             routers.append("\"hidden\": \"").append(list.get(k).getHidden() == 1 ? "true" : "false").append("\" ");
-//            routers.append("\"alwaysShow\" : \"").append(router.getHidden() == 1 ? "true" : "false").append("\", ");
             if(list.get(k).getRedirect() != null)
             {
                 routers.append(", ");
                 routers.append("\"redirect\": \"").append(list.get(k).getRedirect()).append("\" ");
             }
-            // 把，有时间的优化
-            if(list.get(k).getMeta() != null && list.get(k).getMeta() == 1)
-            {
-                routers.append(", ");
-            }
+            if(list.get(k).getMeta() != null && list.get(k).getMeta() == 1) routers.append(", ");
             if(list.get(k).getMeta() != null && list.get(k).getMeta() == 1)
             {
                 routers.append("\"meta\": { ");
@@ -189,17 +167,14 @@ public class LoginService {
                     routers.append("\"path\": \"").append(sonRouters.get(i).getPath()).append("\", ");
                     routers.append("\"name\": \"").append(sonRouters.get(i).getName()).append("\", ");
                     routers.append("\"component\": \"").append(sonRouters.get(i).getComponent()).append("\", ");
+                    routers.append("\"alwaysShow\" : \"").append(sonRouters.get(i).getHidden() == 1 ? "true" : "false").append("\", ");
                     routers.append("\"hidden\": \"").append(sonRouters.get(i).getHidden() == 1 ? "true" : "false").append("\" ");
-//                    routers.append("\"alwaysShow\" : \"").append(sonRouters.get(i).getHidden() == 1 ? "true" : "false").append("\", ");
                     if(sonRouters.get(i).getRedirect() != null)
                     {
                         routers.append(", ");
                         routers.append("\"redirect\": \"").append(sonRouters.get(i).getRedirect()).append("\" ");
                     }
-                    if(sonRouters.get(i).getMeta() != null && sonRouters.get(i).getMeta() == 1)
-                    {
-                        routers.append(", ");
-                    }
+                    if(sonRouters.get(i).getMeta() != null && sonRouters.get(i).getMeta() == 1) routers.append(", ");
                     if(sonRouters.get(i).getMeta() != null && sonRouters.get(i).getMeta() == 1)
                     {
                         routers.append("\"meta\": { ");
@@ -213,13 +188,9 @@ public class LoginService {
                 routers.append("]");
             }
             routers.append("}");
-            if(k != list.size() - 1)
-            {
-                routers.append(",");
-            }
+            if(k != list.size() - 1) routers.append(",");
         }
         routers.append("]");
-        System.out.println(routers);
         resultMap.put("routers",routers);
         return resultMap;
     }

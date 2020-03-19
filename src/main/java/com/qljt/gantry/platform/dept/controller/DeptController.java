@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -116,4 +115,16 @@ public class DeptController {
         return ResultJson.success(updateEntity);
     }
 
+    @GetMapping(value = "/getDeptTreeListByRole")
+    @ResponseBody
+    @ApiOperation("组织架构树形列表查询")
+    private ResultJson getDeptTreeListByRole(@RequestParam Map<String, Object> params){
+        List<Map<String, Object>> deptEntityList = new ArrayList<>();
+        try {
+            deptEntityList = deptService.getDeptTreeListByRole(params);
+        }catch (Exception e){
+            return ResultJson.error(CodeMsg.SERVER_ERROR.fillArgs(e.getMessage()));
+        }
+        return ResultJson.success(deptEntityList);
+    }
 }

@@ -49,6 +49,7 @@ public class ShiroFilter extends FormAuthenticationFilter
         UserEntity user = (UserEntity)SecurityUtils.getSubject().getPrincipal();
         //yf：对salt重新赋值
         SINGNATURE_TOKEN = user.getSalt();
+
         //对当前ID进行SHA256加密
         String encryptionKey= DigestUtils.sha256Hex(SINGNATURE_TOKEN+user.getUserName());
         if (encryptionKey.equals(token)){

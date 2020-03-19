@@ -22,14 +22,14 @@ public interface UserMapper extends BaseMapper<UserEntity>{
 
     @Select({"<script>",
             "select u.*,d.name as deptName from sys_user u " +
-                "LEFT JOIN sys_dept d on u.dept_id = d.dept_id where u.status = 1" +
-                "<if test='username != null'>and u.user_name = #{username}</if>" +
-                "<if test='email != null'>and u.email = #{email}</if>" +
-                "<if test='mobile != null'>and u.mobile = #{mobile}</if>" +
+                    "LEFT JOIN sys_dept d on u.dept_id = d.dept_id where u.status = 1" +
+                    "<if test='username != null'>and u.user_name = #{username}</if>" +
+                    "<if test='email != null'>and u.email = #{email}</if>" +
+                    "<if test='mobile != null'>and u.mobile = #{mobile}</if>" +
 //                "<if test = 'status != null'>and u.status = #{status}</if>" +
-                "<if test = 'deptId != null'>and u.dept_id = #{deptId}</if>",
+                    "<if test = 'deptId != null'>and u.dept_id = #{deptId}</if>",
             "</script>"}
-            )
+    )
     public List<UserEntity> pageQuery(Map<String, Object> params);
 
     @Update("update sys_user set status = '0' where dept_id = #{deptId}")
