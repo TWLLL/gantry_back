@@ -146,6 +146,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- 使用定时任务 begin-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+		</dependency>
+		<!-- 使用定时任务 end-->
 	</dependencies>
 
 	<build>
