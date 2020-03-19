@@ -1,5 +1,6 @@
 package com.qljt.gantry.platform.dict.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qljt.gantry.platform.dict.bean.DictGroupEntity;
 import com.qljt.gantry.platform.dict.bean.DictItemEntity;
 import com.qljt.gantry.platform.dict.mapper.DictGroupMapper;
@@ -96,5 +97,17 @@ public class DictService
             map.put("DictItemEntityList",dictItemEntities);
         }
         return map;
+    }
+
+    public List<DictGroupEntity> selectGroupByGroupCode(String groupCode) {
+        QueryWrapper<DictGroupEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("GROUP_CODE",groupCode);
+        return dictGroupMapper.selectList(queryWrapper);
+    }
+
+    public List<DictItemEntity> selectItemByGroupId(String groupId) {
+        QueryWrapper<DictItemEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("GROUP_ID",groupId);
+        return dictItemMapper.selectList(queryWrapper);
     }
 }

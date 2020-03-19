@@ -7,10 +7,7 @@ import com.qljt.gantry.platform.dict.service.DictService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -87,5 +84,23 @@ public class DictController
     @RequestMapping(value = {"/dict/selectGroupAndItemByGroupId"}, method = {RequestMethod.POST})
     public ResultJson selectGroupAndItemByGroupId(@RequestBody Map<String, Object> map) {
         return ResultJson.success(dictService.selectGroupAndItemByGroupId((String) map.get("groupId")));
+    }
+
+    /**
+     * @param groupCode：groupCode
+     * @return 根据groupCode返回对应的DictGroupList
+     */
+    @RequestMapping(value = {"/dict/selectGroupByGroupCode"}, method = {RequestMethod.POST})
+    public ResultJson selectGroupByGroupCode(@RequestParam("groupCode") String groupCode){
+        return ResultJson.success(dictService.selectGroupByGroupCode(groupCode));
+    }
+
+    /**
+     * @param groupId：groupId
+     * @return 根据groupId返回对应的DictItemList
+     */
+    @RequestMapping(value = {"/dict/selectMethodNameDict"}, method = {RequestMethod.POST})
+    public ResultJson selectItemByGroupId(@RequestParam("groupId") String groupId){
+        return ResultJson.success(dictService.selectItemByGroupId(groupId));
     }
 }
